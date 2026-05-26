@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArLab </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Фоновые изображения -->
+    <div class="bg-left"></div>
+    <div class="bg-right"></div>
+    <div class="bg-components"></div>
+
+    <!-- Центральный блок -->
+    <div class="login-container">
+        <img src="assets/logo.png" alt="ArLab" class="logo">
+
+       <!-- Замените вашу форму на эту -->
+<form class="login-form" onsubmit="handleLogin(event)">
+    <div class="input-group">
+        <label for="login">Введите логин</label>
+        <input type="text" id="login" name="login" required>
+    </div>
+
+    <div class="input-group">
+        <label for="password">Введите пароль</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+
+    <div class="remember">
+        <input type="checkbox" id="remember">
+        <label for="remember">Запомнить меня</label>
+    </div>
+
+    <button type="submit" class="btn-login">Войти</button>
+</form>
+
+    <!-- Новые элементы: компоненты слева и Arduino справа -->
+    <div class="components-left"></div>
+    <div class="arduino-right"></div>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-left">Контакты: ssssssss@mail.ru</div>
+        <div class="footer-center">© 2025 ArLab</div>
+        <div class="footer-right">Онлайн-курсы</div>
+    </footer>
+    <!-- Подключение основного скрипта -->
+<script src="script.js"></script>
+</body>
+</html>
