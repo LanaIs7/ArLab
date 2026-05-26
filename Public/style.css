@@ -1,0 +1,816 @@
+/* ==================== СБРОС И БАЗОВЫЕ СТИЛИ ==================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* ==================== ФОНОВЫЕ ЭЛЕМЕНТЫ ==================== */
+.bg-left {
+    position: absolute; left: 0; top: 0; width: 30%; height: 100%;
+    background: url('assets/parrot-left.png') no-repeat left bottom;
+    background-size: contain; opacity: 0.4; z-index: -1;
+}
+
+.parrot-silhouette {
+    width: 440px; height: 900px;
+    background: url('assets/parrot-left.png') no-repeat center;
+    background-size: contain; opacity: 0.3; margin-bottom: 20px;
+    transform: translate(60px, 0px); pointer-events: none;
+}
+
+/* ==================== ВЕРХНЯЯ ШАПКА (ИНСТРУКЦИЯ) ==================== */
+.page-header {
+    background-color: #f8f9fa; padding: 10px 15px;
+    border-bottom: 1px solid #e0e0e0; font-size: 14px; width: 100%;
+}
+
+.header-content {
+    max-width: 1200px; margin: 0 auto; display: flex;
+    justify-content: space-between; flex-wrap: wrap; gap: 15px;
+}
+
+.header-section { flex: 1; min-width: 280px; }
+.header-section h3 { color: #2c3e50; margin: 5px 0 8px; font-size: 16px; font-weight: 600; }
+.header-section p { color: #34495e; line-height: 1.5; margin: 4px 0; font-size: 14px; }
+
+/* ==================== ОСНОВНОЙ КОНТЕЙНЕР ==================== */
+.dashboard-container {
+    display: flex; width: 100%; height: calc(100vh - 180px);
+    margin-top: 0; overflow: hidden;
+}
+
+/* ==================== БОКОВАЯ ПАНЕЛЬ ==================== */
+.sidebar {
+    width: 250px; background-color: #e0e0e0; position: relative;
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 20px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); z-index: 10;
+}
+
+/* Блок материалов (исправлена кликабельность) */
+.materials-section {
+    position: absolute; top: 15px; left: 15px; width: 220px;
+    background-color: rgba(255, 255, 255, 0.0); padding: 15px;
+    border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 2000; pointer-events: auto;
+}
+
+.materials-header {
+    font-weight: 600; color: #495057; margin-bottom: 6px;
+    padding-bottom: 4px; border-bottom: 1px solid #ced4da; font-size: 14px;
+}
+
+.materials-list { list-style: none; padding: 0; margin: 0; }
+.materials-list li { margin-bottom: 8px; pointer-events: auto; }
+
+.materials-list a {
+    color: #007bff; text-decoration: underline; font-size: 13px;
+    cursor: pointer; pointer-events: auto; word-wrap: break-word; line-height: 1.4;
+}
+.materials-list a:hover { color: #0056b3; }
+
+.sidebar-buttons {
+    display: flex; flex-direction: column; gap: 10px; width: 80%;
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10;
+}
+
+.btn-sidebar {
+    width: 100%; padding: 12px; border: none; border-radius: 6px;
+    font-size: 16px; cursor: pointer; transition: background-color 0.2s; text-align: center;
+}
+.btn-code { background-color: #ff8a65; color: white; }
+.btn-open-schemes { background-color: #ffb74d; color: white; }
+.btn-logout { background-color: #fff176; color: #333; }
+
+/* ==================== ОСНОВНОЙ КОНТЕНТ ==================== */
+.main-content {
+    flex-grow: 1; background-color: #d8d8d8; display: flex;
+    flex-direction: column; position: relative; padding: 0; margin: 0;
+}
+
+/* ==================== КРАСНАЯ ЛИНИЯ С ЗАДАНИЯМИ ==================== */
+.header-bar {
+    height: 40px; background-color: #ff9999; width: 100%;
+    display: flex; justify-content: center; align-items: center;
+    gap: 15px; font-weight: bold; font-size: 16px; color: #333;
+    cursor: pointer; flex-shrink: 0;
+}
+
+.header-bar span {
+    display: none; padding: 4px 8px; border-radius: 4px; transition: background-color 0.2s;
+}
+.header-bar span:hover { background-color: rgba(255, 255, 255, 0.5); }
+.header-bar.active span { display: inline; }
+
+/* ==================== РАБОЧАЯ ОБЛАСТЬ ==================== */
+.workspace {
+    position: relative; flex-grow: 1; display: flex;
+    justify-content: center; align-items: center; overflow: hidden;
+}
+
+.arduino-schema { position: relative; display: inline-block; }
+
+.arduino-schema img {
+    max-width: 90%; max-height: 90%; display: none;
+    transform: rotate(-90deg); transform-origin: center;
+}
+.workspace.active .arduino-schema img { display: block; }
+
+/* Скрытие точек пинов до активации режима схем */
+.pin-point {
+    display: none; position: absolute; width: 12px; height: 12px;
+    background: #007bff; border-radius: 50%; cursor: pointer;
+    border: 2px solid white; z-index: 50;
+}
+.workspace.active .pin-point { display: block; }
+
+/* ==================== ПАНЕЛЬ ЗАДАНИЯ ==================== */
+.task-panel {
+    position: absolute; top: 70px; left: 20px; background-color: #fff;
+    padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 400px; width: 300px; z-index: 100; display: none; font-size: 14px;
+}
+.task-panel.active { display: block; }
+.task-panel h3 { margin-bottom: 8px; color: #2c3e50; font-size: 18px; }
+.task-panel p { color: #34495e; line-height: 1.5; margin: 0; }
+.task-close {
+    position: absolute; top: 8px; right: 10px; background: none;
+    border: none; font-size: 18px; cursor: pointer; color: #999;
+}
+
+/* ==================== ПАНЕЛЬ КОМПОНЕНТОВ ==================== */
+.components-panel {
+     display: none;
+    position: absolute;
+    bottom: 0px;
+    left: 5%;
+    right: 5%;
+    width: 90%;
+    max-width: 1200px;
+    padding: 15px; /* Уменьшили с 20px */
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 10;
+}
+
+.components-panel.active {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
+    gap: 8px; /* Уменьшили расстояние между кнопками (было 15px) */
+    align-items: center;
+}
+
+.component-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 6px 10px; /* Уменьшили отступы (было 8px 16px) */
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px; /* Уменьшили шрифт (было 14px) */
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: nowrap; /* Запрещаем перенос текста */
+    flex-shrink: 0; /* Запрещаем сжатие кнопок */
+    min-width: auto; /* Убираем минимальную ширину */
+}
+
+.component-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Контейнер для перетаскиваемых компонентов */
+.components-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 5; overflow: visible !important; pointer-events: none;
+}
+.component-wrapper { position: absolute; cursor: move; z-index: 10; pointer-events: auto; }
+/* Стили для добавленных компонентов */
+.component-item {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    position: absolute;
+    cursor: move;
+    z-index: 10;
+    
+    /* === ДОБАВЬТЕ ЭТУ СТРОКУ === */
+    mix-blend-mode: multiply; 
+    /* =========================== */
+}
+
+/* Точки подключения на компонентах */
+.component-contact {
+    position: absolute; width: 12px; height: 12px; border-radius: 50%;
+    cursor: pointer; z-index: 100; transition: transform 0.2s;
+    border: 2px solid white; box-shadow: 0 0 0 2px #fff;
+}
+.component-contact:hover { transform: scale(1.3); }
+.component-contact.anode { background: #28a745; }
+.component-contact.cathode { background: #dc3545; }
+
+/* Провода */
+.wire {
+    position: absolute; background: linear-gradient(90deg, #007bff, #0056b3);
+    height: 3px; transform-origin: 0 0; z-index: 50;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); pointer-events: auto;
+}
+.temp-wire {
+    position: absolute; background: linear-gradient(90deg, #ffc107, #e0a800);
+    height: 3px; transform-origin: 0 0; z-index: 200; opacity: 0.7; pointer-events: none;
+}
+
+/* Режим удаления */
+.component-wrapper.delete-target { box-shadow: 0 0 15px #f44336 !important; z-index: 2000 !important; }
+
+/* ==================== РЕДАКТОР КОДА ==================== */
+.code-editor {
+    display: none; position: absolute; top: 60px; left: 20px; right: 20px;
+    bottom: 80px; background-color: #f8f9fa; border-radius: 8px;
+    padding: 15px; overflow-y: auto; z-index: 102;
+}
+.code-input-container {
+    background-color: #2d2d2d; border-radius: 8px; padding: 10px;
+    height: calc(100% - 60px); overflow: hidden;
+}
+.code-input {
+    width: 100%; height: 100%; background-color: #2d2d2d; color: #f8f8f2;
+    border: none; font-family: 'Courier New', monospace; font-size: 16px;
+    resize: none; padding: 10px; border-radius: 4px; box-sizing: border-box;
+}
+.code-input:focus { outline: none; box-shadow: 0 0 0 2px #66b2ff; }
+.code-input::placeholder { color: #6c757d; opacity: 0.8; }
+
+/* ==================== НИЖНЯЯ ПАНЕЛЬ УПРАВЛЕНИЯ ==================== */
+.footer-panel {
+    background-color: white; width: 100%; padding: 15px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05); gap: 10px;
+    position: relative; z-index: 2; flex-shrink: 0;
+}
+
+.btn-footer {
+    padding: 12px 20px; border: none; border-radius: 8px; font-size: 16px;
+    cursor: pointer; transition: background-color 0.2s; min-width: 120px; text-align: center;
+}
+.btn-check { background-color: #66bb6a; color: white; }
+.btn-delete { background-color: #f44336; color: white; }
+.btn-delete:hover { background-color: #d32f2f; }
+.btn-help { background-color: #42a5f5; color: white; }
+.btn-statistics { background-color: #ab47bc; color: white; }
+
+.logo-small { margin-left: auto; display: flex; align-items: center; }
+.logo-small img { width: 80px; }
+
+/* ==================== ГЛОБАЛЬНЫЙ ФУТЕР ==================== */
+/* Футер страницы */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: #d4f0ff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    z-index: 100;
+}
+
+footer div {
+    flex: 1;
+    text-align: center;
+}
+
+footer .footer-left {
+    text-align: left;
+}
+
+footer .footer-right {
+    text-align: right;
+}
+
+/* Чтобы футер не перекрывал контент, добавим отступ снизу для body */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-bottom: 80px; /* Отступ для фиксированного футера */
+}
+
+/* ==================== АДАПТИВНОСТЬ ==================== */
+@media (max-width: 768px) {
+    .dashboard-container { flex-direction: column; height: auto; }
+    .sidebar { width: 100%; padding: 20px; margin-bottom: 20px; }
+    .main-content { margin: 0; padding: 0; }
+    .header-bar { margin: 0; }
+    .workspace { margin: 0; }
+    .footer-panel { flex-direction: column; gap: 10px; padding: 10px; }
+    .btn-footer { width: 100%; }
+    .logo-small { margin-top: 10px; text-align: center; margin-left: 0; }
+    .materials-section { position: relative; width: 100%; left: 0; top: 0; margin-bottom: 15px; }
+}
+
+/* Анимация для включённого LED */
+.component-wrapper.led_2 {
+    box-shadow: 0 0 15px rgba(255, 105, 59, 0.7);
+    border-radius: 10px;
+}
+.component-wrapper.led_2 .component-item {
+    filter: drop-shadow(0 0 12px #ffeb3b) brightness(1.4);
+    animation: ledPulse 1.5s infinite alternate ease-in-out;
+}
+@keyframes ledPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+/* Подсветка компонентов при успешной проверке */
+.component-wrapper.circuit-active {
+    box-shadow: 0 0 12px rgba(40, 167, 69, 0.5);
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Анимация для включённого RGB LED */
+.component-wrapper.rgb-led-active {
+    animation: rgbLedPulse 1.5s infinite alternate ease-in-out;
+}
+
+.component-wrapper.rgb-led-active .component-item {
+    filter: none; /* фильтр теперь на обёртке */
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+}
+
+@keyframes rgbLedPulse {
+    0%   { filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6)) brightness(1.2); }
+    100% { filter: drop-shadow(0 0 18px rgba(0, 255, 255, 0.9)) brightness(1.5); }
+}
+
+/* Контакты RGB LED */
+.component-contact.red { 
+    background: #dc3545; 
+    border: 2px solid #fff;
+}
+.component-contact.green { 
+    background: #28a745; 
+    border: 2px solid #fff;
+}
+.component-contact.blue { 
+    background: #0d6efd; 
+    border: 2px solid #fff;
+}
+.component-contact.common { 
+    background: #6c757d; 
+    border: 2px solid #fff;
+}
+
+
+/* стили для index.html */
+
+
+.bg-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    background: url('assets/parrot-right.png') no-repeat right bottom;
+    background-size: contain;
+    opacity: 0.4;
+    z-index: -1;
+}
+
+/* Центральный блок входа */
+.login-container {
+    background-color: #dcdcdc;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    margin: 100px auto;  /* было: margin-top: 50px; */
+    
+    z-index: 1;
+}
+
+.logo {
+    width: 220px;
+    margin-bottom: 30px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    font-size: 14px;
+    color: #555;
+}
+
+.remember input[type="checkbox"] {
+    accent-color: #007bff;
+}
+
+.btn-login {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.btn-login:hover {
+    background-color: #0056b3;
+}
+
+/* Новые элементы: компоненты слева и Arduino справа — немного увеличены */
+.components-left {
+    position: absolute;
+    left: 5%;
+    bottom: 10%;
+    width: 33%;
+    height: 300px;
+    background: url('assets/components-set.png') no-repeat center;
+    background-size: contain;
+    opacity: 0.6;
+    z-index: -1;
+}
+
+.arduino-right {
+    position: absolute;
+    right: 5%;
+    bottom: 10%;
+    width: 27%;
+    height: 400px;
+    background: url('assets/arduino-uno.png') no-repeat center;
+    background-size: contain;
+    opacity: 0.6;
+    z-index: -1;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    body {
+        padding-top: 60px;
+    }
+    .bg-left, .bg-right {
+        opacity: 0.2;
+    }
+    .login-container {
+        padding: 25px 15px;
+        width: 95%;
+    }
+    .logo {
+        width: 180px;
+    }
+    .components-left {
+        left: 2%;
+        bottom: 8%;
+        width: 42%;
+        height: 125px;
+    }
+    .arduino-right {
+        right: 2%;
+        bottom: 8%;
+        width: 37%;
+        height: 125px;
+    }
+}
+
+
+/* Модальное окно подсказок */
+.help-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 3000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+}
+
+.help-modal.active {
+    display: flex;
+}
+
+.help-modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: helpSlideIn 0.3s ease;
+}
+
+@keyframes helpSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.help-modal-content h3 {
+    margin: 0 0 20px 0;
+    color: #2c3e50;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.help-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+    line-height: 1;
+}
+
+.help-close:hover {
+    color: #333;
+}
+
+#helpContent {
+    color: #34495e;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+#helpContent code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: #e83e8c;
+    font-size: 14px;
+}
+
+#helpContent pre {
+    background: #2d2d2d;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 10px 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.btn-help-close {
+    background: #42a5f5;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+.btn-help-close:hover {
+    background: #1976d2;
+}
+
+
+/* Дополнительные цвета контактов */
+.component-contact.positive {
+    background: #dc3545; /* Красный (+) */
+}
+.component-contact.negative {
+    background: #333;    /* Черный (-) */
+}
+.component-contact.signal {
+    background: #ffc107; /* Оранжевый (Сигнал) */
+}
+.component-contact.vcc {
+    background: #dc3545; /* Красный (Питание) */
+}
+.component-contact.gnd {
+    background: #795548; /* Коричневый (Земля) */
+}
+
+
+/* Поворот сервопривода на 90 градусов по часовой стрелке */
+.component-item[alt="сервопривод"] {
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+/* Цвета контактов для новых компонентов */
+.component-contact.vcc { 
+    background: #ffc107; 
+    border: 2px solid #fff; 
+}
+
+.component-contact.signal { 
+    background: #007bff; 
+    border: 2px solid #fff; 
+}
+
+.component-contact.gnd { 
+    background: #6c757d; 
+    border: 2px solid #fff; 
+}
+
+.component-contact.middle { 
+    background: #28a745; 
+    border: 2px solid #fff; 
+}
+
+
+/* Модальное окно статистики */
+.stats-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 6000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+.stats-modal.active { display: flex; }
+
+.stats-modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.stats-close {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+}
+.stats-close:hover { color: #333; }
+
+.stats-modal-content h2 {
+    margin: 0 0 20px 0;
+    color: #2c3e50;
+    font-size: 22px;
+    text-align: center;
+}
+
+#statsContainer {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+.stat-row:last-child { border-bottom: none; }
+
+.stat-label { font-weight: 600; color: #555; }
+.stat-value { font-weight: bold; }
+.stat-value.success { color: #28a745; }
+.stat-value.warning { color: #ffc107; }
+.stat-value.error { color: #dc3545; }
+
+.progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background: #e9ecef;
+    border-radius: 5px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #00d4ff);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.stats-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.stats-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.btn-stats-reset { background: #f8d7da; color: #721c24; }
+.btn-stats-reset:hover { background: #f5c6cb; }
+.btn-stats-close { background: #007bff; color: white; }
+.btn-stats-close:hover { background: #0056b3; }
+
+
+/* Цвета для разных режимов в статистике */
+.stat-value.success { color: #28a745; }
+.stat-value.warning { color: #ffc107; }
+.stat-value.error { color: #dc3545; }
+
+.progress-bar-bg {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
